@@ -658,6 +658,10 @@
                         <button id="admin-cam-btn" type="button" onclick="teacherToggle('cam')" class="px-3 py-2 rounded-xl bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] text-xs font-bold"><i class="fa-solid fa-video"></i> Camera Off</button>
                         <button id="admin-mic-btn" type="button" onclick="teacherToggle('mic')" class="px-3 py-2 rounded-xl bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] text-xs font-bold"><i class="fa-solid fa-microphone"></i> Mic Off</button>
                     </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button id="admin-share-btn" type="button" onclick="teacherShareToggle()" class="hidden px-3 py-2 rounded-xl bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] text-xs font-bold"><i class="fa-solid fa-display"></i> Share Screen</button>
+                        <button type="button" onclick="teacherOpenViewer()" class="px-3 py-2 rounded-xl bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] text-xs font-bold"><i class="fa-solid fa-book-open"></i> Show Module</button>
+                    </div>
                     <p class="text-xs font-bold text-[#3b271f]">Students connected: <span id="admin-live-count">0</span> / 10</p>
                     <div id="admin-hands" class="space-y-2"></div>
                     <div id="admin-students-video" class="grid grid-cols-2 gap-2"></div>
@@ -2652,7 +2656,7 @@ async function teacherStart(room){
 function teacherPeer(id,name){
   dropPeer(id);
   const pc=new RTCPeerConnection(LIVE_ICE);
-  teach.stream.getTracks().forEach(t=>pc.addTrack(t,teach.stream));
+  teach.stream.getTracks().forEach(t=>pc.addTrack((t.kind==='video'&&teachShare)?teachShare:t,teach.stream));
   const pe={pc,name,stream:new MediaStream()};teach.peers.set(id,pe);
   pc.onicecandidate=e=>{if(e.candidate)liveSend({type:'ice',to:id,from:'teacher',cand:e.candidate});};
   pc.ontrack=e=>{pe.stream.addTrack(e.track);renderTeacherStudents();};
@@ -2715,6 +2719,7 @@ function renderTeacherStudents(){
   }
 }
 function teacherStop(){
+  if(typeof stopShare==='function')stopShare();
   liveSend({type:'end'});
   teach.peers.forEach(pe=>{try{pe.pc.close();}catch(e){}});
   teach.peers.clear();teach.hands.clear();
@@ -2858,6 +2863,119 @@ function studentLiveFullscreen(){
   if(typeof t==='function')window.switchPortalTab=function(tab){const r=t.apply(this,arguments);if(tab==='classroom'||tab==='dashboard')loadStudentLive();return r;};
   setInterval(()=>{if(sToken)loadStudentLive();},30000);
   setInterval(()=>{if(isAdmin)loadAdminLive();},30000);
+})();
+</script>
+<div id="viewer-modal" class="hidden fixed inset-0 z-[98] bg-[#2c221e] flex-col">
+  <div class="flex flex-wrap items-center gap-2 px-3 py-2 bg-[#3b271f] text-white">
+    <select id="viewer-pdf" onchange="viewerPick(this.value)" class="max-w-[40%] text-xs rounded-lg px-2 py-1 text-[#3b271f]"></select>
+    <button type="button" onclick="viewerGo(-1)" class="px-2 py-1 rounded bg-white/10 text-xs">&lsaquo; Prev</button>
+    <span id="viewer-page" class="text-xs">0 / 0</span>
+    <button type="button" onclick="viewerGo(1)" class="px-2 py-1 rounded bg-white/10 text-xs">Next &rsaquo;</button>
+    <button type="button" onclick="viewerColorSet('#dc2626')" class="w-6 h-6 rounded-full bg-red-600 border-2 border-white" aria-label="Red pen"></button>
+    <button type="button" onclick="viewerColorSet('#2563eb')" class="w-6 h-6 rounded-full bg-blue-600 border-2 border-white" aria-label="Blue pen"></button>
+    <button type="button" onclick="viewerColorSet('#eab308')" class="w-6 h-6 rounded-full bg-yellow-500 border-2 border-white" aria-label="Yellow pen"></button>
+    <button type="button" onclick="viewerClear()" class="px-2 py-1 rounded bg-white/10 text-xs">Clear</button>
+    <button type="button" onclick="closeViewer()" class="ml-auto px-2 py-1 rounded bg-rose-600 text-white text-xs">Close</button>
+  </div>
+  <div id="viewer-stage" class="flex-1 overflow-auto bg-[#4a3a33] p-2">
+    <div id="viewer-wrap" class="relative mx-auto" style="width:fit-content">
+      <canvas id="viewer-canvas" class="block bg-white"></canvas>
+      <canvas id="viewer-draw" class="absolute left-0 top-0" style="touch-action:none;cursor:crosshair"></canvas>
+    </div>
+  </div>
+</div>
+<script>
+/* --- Share Screen (PC) + Module viewer with pen --- */
+let teachShare=null,viewer={pdfId:null,doc:null,page:1,total:1,strokes:{},color:'#dc2626',drawing:null,rq:0};
+const IS_MOBILE=/Android|iPhone|iPad/i.test(navigator.userAgent);
+function setShareBtn(){const b=$('admin-share-btn');if(!b)return;b.classList.toggle('hidden',IS_MOBILE||!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia));b.innerHTML=teachShare?'<i class="fa-solid fa-display"></i> Stop Sharing':'<i class="fa-solid fa-display"></i> Share Screen';}
+function replaceVideoOnPeers(track){
+  teach.peers.forEach(pe=>pe.pc.getSenders().forEach(snd=>{if(snd.track&&snd.track.kind==='video')snd.replaceTrack(track).catch(()=>{});}));
+}
+async function teacherShareToggle(){
+  if(teachShare){stopShare();return;}
+  let screen=null;
+  try{screen=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});}catch(e){return;}
+  const track=screen.getVideoTracks()[0];if(!track)return;
+  teachShare=track;
+  track.onended=()=>stopShare();
+  replaceVideoOnPeers(track);
+  const v=$('admin-live-video');if(v){v.srcObject=new MediaStream([track]);v.play().catch(()=>{});}
+  setShareBtn();
+}
+function stopShare(){
+  if(!teachShare)return;
+  const t=teachShare;teachShare=null;try{t.stop();}catch(e){}
+  const cam=teach.stream&&teach.stream.getVideoTracks()[0];
+  if(cam)replaceVideoOnPeers(cam);
+  const v=$('admin-live-video');if(v&&teach.stream)v.srcObject=teach.stream;
+  setShareBtn();
+}
+
+/* ----- module viewer ----- */
+async function teacherOpenViewer(){
+  const list=(await dbGetAll('pdfs')).filter(p=>Number(p.seasonId)===Number(adminSelectedSeasonId));
+  const sel=$('viewer-pdf');
+  if(!list.length){showToast('No module uploaded for this class yet.');return;}
+  sel.innerHTML=list.map(p=>`<option value="${p.id}">${escapeHtml(p.title)}</option>`).join('');
+  $('viewer-modal').classList.remove('hidden');$('viewer-modal').classList.add('flex');
+  await viewerPick(list[0].id);
+  setShareBtn();
+}
+async function viewerPick(pdfId){
+  const p=await dbGet('pdfs',Number(pdfId));if(!p)return;
+  viewer.pdfId=Number(pdfId);viewer.page=1;
+  viewer.doc=await pdfjsLib.getDocument(pub('class-pdfs',p.path)).promise;
+  viewer.total=viewer.doc.numPages;
+  viewerRender();
+}
+function viewerKey(){return viewer.pdfId+':'+viewer.page;}
+async function viewerRender(){
+  if(!viewer.doc)return;
+  const run=++viewer.rq;
+  const stage=$('viewer-stage'),cv=$('viewer-canvas'),dv=$('viewer-draw');
+  const page=await viewer.doc.getPage(viewer.page);
+  if(run!==viewer.rq)return;
+  const base=page.getViewport({scale:1});
+  const width=Math.max(320,stage.clientWidth-16);
+  const vp=page.getViewport({scale:width/base.width});
+  cv.width=vp.width;cv.height=vp.height;cv.style.width=vp.width+'px';cv.style.height=vp.height+'px';
+  dv.width=vp.width;dv.height=vp.height;dv.style.width=vp.width+'px';dv.style.height=vp.height+'px';
+  await page.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;
+  if(run!==viewer.rq)return;
+  $('viewer-page').textContent=viewer.page+' / '+viewer.total;
+  viewerRedraw();
+}
+function viewerRedraw(){
+  const dv=$('viewer-draw');if(!dv)return;
+  const ctx=dv.getContext('2d');ctx.clearRect(0,0,dv.width,dv.height);
+  (viewer.strokes[viewerKey()]||[]).forEach(st=>{
+    if(st.pts.length<2)return;
+    ctx.beginPath();ctx.strokeStyle=st.color;ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.moveTo(st.pts[0].x*dv.width,st.pts[0].y*dv.height);
+    st.pts.slice(1).forEach(q=>ctx.lineTo(q.x*dv.width,q.y*dv.height));
+    ctx.stroke();
+  });
+}
+function viewerGo(d){
+  const n=viewer.page+d;if(n<1||n>viewer.total)return;
+  viewer.page=n;viewerRender();
+}
+function viewerColorSet(c){viewer.color=c;}
+function viewerClear(){viewer.strokes[viewerKey()]=[];viewerRedraw();}
+function closeViewer(){$('viewer-modal').classList.add('hidden');$('viewer-modal').classList.remove('flex');}
+(function(){
+  const dv=document.getElementById('viewer-draw');if(!dv)return;
+  const pos=e=>{const r=dv.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};};
+  dv.addEventListener('pointerdown',e=>{
+    dv.setPointerCapture(e.pointerId);
+    const st={color:viewer.color,pts:[pos(e)]};
+    const k=viewerKey();viewer.strokes[k]=viewer.strokes[k]||[];viewer.strokes[k].push(st);
+    viewer.drawing=st;
+  });
+  dv.addEventListener('pointermove',e=>{if(!viewer.drawing)return;viewer.drawing.pts.push(pos(e));viewerRedraw();});
+  const end=()=>{viewer.drawing=null;};
+  dv.addEventListener('pointerup',end);dv.addEventListener('pointercancel',end);
 })();
 </script>
 </body>
