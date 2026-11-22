@@ -5726,6 +5726,7 @@ async function adminToggleRegistration(){
   await loadAdminRegistration();
 }
 applyRegistrationStatus();
+setInterval(applyRegistrationStatus,30000);
 
 /* --- Friday Khutba slideshow --- */
 let khutbaSlides=[],khutbaIdx=0,khutbaTimer=null;
