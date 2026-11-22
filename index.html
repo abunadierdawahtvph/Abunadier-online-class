@@ -33,10 +33,11 @@
         body {
             font-family: 'Nunito', sans-serif;
             font-size: 13px;
-            background: radial-gradient(circle at 12% 18%, #fdf4ed 0%, transparent 42%),
-                        radial-gradient(circle at 88% 12%, #f5ebe0 0%, transparent 40%),
-                        radial-gradient(circle at 50% 90%, #eed7c5 0%, transparent 45%),
-                        #fbf7f4;
+            background: radial-gradient(circle at 12% 18%, #f3c9a6 0%, transparent 42%),
+                        radial-gradient(circle at 88% 12%, #bfe0cf 0%, transparent 40%),
+                        radial-gradient(circle at 50% 90%, #e8cf9e 0%, transparent 45%),
+                        #efe6dc;
+            background-attachment: fixed;
             min-height: 100vh;
             color: #2c221e;
         }
@@ -44,12 +45,19 @@
             font-family: 'Quicksand', sans-serif;
         }
         .glossy-card {
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(245, 230, 218, 0.9);
-            box-shadow: 0 12px 36px -8px rgba(110, 77, 58, 0.12),
-                        inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+            background: linear-gradient(145deg, rgba(255,255,255,0.78), rgba(255,255,255,0.5));
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            border: 1px solid rgba(255,255,255,0.75);
+            box-shadow: 0 24px 48px -12px rgba(60,40,30,0.28),
+                        0 8px 16px -6px rgba(60,40,30,0.12),
+                        inset 0 1px 0 0 rgba(255,255,255,0.9);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .glossy-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 30px 56px -14px rgba(60,40,30,0.32),
+                        inset 0 1px 0 0 rgba(255,255,255,0.9);
         }
         .glossy-btn {
             background: linear-gradient(135deg, #7c4d32 0%, #9c6644 50%, #b07d62 100%);
@@ -108,7 +116,7 @@
                     <p class="text-[10px] font-semibold text-[#8c583c] mt-0.5">Interactive Digital Academy</p>
                     <div class="flex items-center gap-1.5 mt-1">
                         <button type="button" onclick="openBackground()" title="View background" aria-label="View background" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-solid fa-graduation-cap text-[11px]"></i></button>
-                        <button type="button" onclick="openJobs()" title="Work experience" aria-label="Work experience" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-solid fa-briefcase text-[11px]"></i></button>
+                        <button type="button" onclick="openJobs()" title="Work experience" aria-label="Work experience" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-solid fa-briefcase text-[11px]"></i></button> <button type="button" onclick="openProgram()" title="Abunadier Online Class Program" aria-label="Abunadier Online Class Program" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-solid fa-circle-info text-[11px]"></i></button>
                         <a href="https://www.facebook.com/share/19LSNP2f3p/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-brands fa-facebook-f text-[11px]"></i></a>
                         <a href="https://www.instagram.com/abunadier_dawa_tv" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-brands fa-instagram text-[11px]"></i></a>
                         <a href="https://www.tiktok.com/@abunadier_dawah_tv_ph" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-brands fa-tiktok text-[11px]"></i></a>
@@ -140,24 +148,11 @@
   <div id="home-slider-dots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5"></div>
 </div>
 <div class="text-center mb-5">
-                    <p id="season-topic" class="text-sm font-extrabold text-[#7c4d32] mb-2.5">مَوْسِمُ الْقُرْآنِ - QUR’AN SEASON</p>
-                    <p id="season-topic-desc" class="text-[11px] leading-snug text-[#735c52] -mt-1.5 mb-3 max-w-xs mx-auto">Learn to read Arabic texts correctly and confidently, step by step.</p>
+                    <p id="season-topic" style="display:none!important" class="text-sm font-extrabold text-[#7c4d32] mb-2.5">مَوْسِمُ الْقُرْآنِ - QUR’AN SEASON</p>
+                    <p id="season-topic-desc" style="display:none!important" class="text-[11px] leading-snug text-[#735c52] -mt-1.5 mb-3 max-w-xs mx-auto">Learn to read Arabic texts correctly and confidently, step by step.</p>
                     <p class="mb-3 text-[9px] font-bold text-[#7c4d32]">Class schedule: Saturday and Sunday &nbsp;|&nbsp; 6:00 AM to 8:00 AM</p>
-<div class="glossy-card rounded-3xl p-5 sm:p-6 mb-4 text-left text-[11px] leading-relaxed text-[#3b271f] space-y-2">
-<div class="flex items-center justify-between gap-2">
-  <p class="text-[12px] font-extrabold text-[#7c4d32] tracking-wide">ABUNADIER ONLINE CLASS PROGRAM</p>
-  <button type="button" onclick="toggleProgram()" id="program-toggle" class="px-3 py-1.5 rounded-xl glossy-btn text-white text-[11px] font-bold transition"><i class="fa-solid fa-eye"></i> View</button>
-</div>
-<div id="program-body" class="hidden space-y-2 pt-2">
-  <p>The Abunadier Online Class Program aims to make learning accessible to every child by providing educational opportunities, learning materials, and online classes that help children develop their knowledge and skills.</p>
-  <p>We offer the following programs:</p>
-  <p><b>1. Free Learning Materials and Lessons</b><br>We provide free lessons and learning materials that children can use to practice and improve their knowledge at home, with the guidance and support of their parents.</p>
-  <p><b>2. Weekend Online Classes</b><br>We offer regular online classes every Saturday and Sunday, from 6:00 AM to 8:00 AM. Registration is required for children who wish to participate in these classes.</p>
-  <p><b>3. Arabic Language Tutorial</b><br>We also offer Arabic language tutorials for those who are interested in learning the Arabic language. Students may choose from the available schedules provided by the administrator.</p>
-  <p class="font-extrabold text-[#7c4d32]">Our Commitment</p>
-  <p>We believe that every child deserves an opportunity to learn. Through this program, we aim to support children, encourage continuous learning, and help parents become active partners in their children’s education.</p>
-</div>
-</div>
+<div class="mx-auto mb-3 max-w-xl rounded-xl border border-amber-300 bg-amber-50/80 px-3 py-2 text-center"><p class="text-[10px] font-extrabold text-amber-800"><i class="fa-solid fa-bullhorn mr-1"></i> Announcement: Our weekly classes and tutorials are not yet available.</p></div>
+
                 </div>
 <div class="glossy-card rounded-3xl p-5 sm:p-6 mb-4 space-y-3">
   <div class="flex items-center justify-between gap-2">
@@ -509,6 +504,11 @@
 
     <!-- FOOTER -->
     <footer class="py-4 px-4 border-t border-[#f0e2d5] bg-white/40 backdrop-blur-xs mt-8">
+  <div class="max-w-5xl mx-auto mb-2 flex items-center gap-2">
+    <p class="text-[9px] font-bold text-[#7c4d32]">You can contact Abunadier here</p>
+    <a href="https://wa.me/639061082088" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-brands fa-whatsapp text-[11px]"></i></a>
+    <a href="https://m.me/mon2x143" target="_blank" rel="noopener noreferrer" aria-label="Messenger" title="Messenger" class="w-6 h-6 rounded-full bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#7c4d32] flex items-center justify-center transition"><i class="fa-brands fa-facebook-messenger text-[11px]"></i></a>
+  </div>
         <div class="max-w-5xl mx-auto flex items-center justify-between text-[11px] text-[#9e8376]">
             <span>&copy; 2026 Abunadier Online Class. All rights reserved.</span>
             <button onclick="openAdminModal()" title="Admin Backend" class="w-7 h-7 rounded-lg hover:bg-[#f5ebe0]/70 text-[#9e8376] hover:text-[#3b271f] flex items-center justify-center transition">
@@ -2506,11 +2506,11 @@ async function renderAdminQuizList(){
 cancelEditQuiz();
 </script>
 <div id="bg-modal" class="hidden fixed inset-0 z-[90] bg-[#2c221e]/70 backdrop-blur-sm flex items-center justify-center p-3" onclick="if(event.target===this)closeBackground()" role="dialog" aria-modal="true" aria-labelledby="bg-title">
-    <div class="bg-white rounded-3xl w-full max-w-md max-h-[85vh] overflow-y-auto p-5 space-y-4 shadow-xl border border-[#ebdcd0]">
+    <div class="glossy-card rounded-3xl w-full max-w-md max-h-[85vh] overflow-y-auto p-5 sm:p-6 space-y-4 text-[#3b271f]">
         <div class="flex items-center gap-3">
             <img id="bg-photo" src="" alt="Abunadier" class="w-14 h-14 rounded-2xl object-cover border border-[#ebdcd0] shrink-0">
             <div class="min-w-0 flex-1"><h3 id="bg-title" class="text-sm font-extrabold text-[#3b271f]">Abunadier</h3><p class="text-[11px] text-[#735c52]">Background</p></div>
-            <button type="button" id="bg-close" onclick="closeBackground()" class="w-8 h-8 rounded-xl bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#735c52] flex items-center justify-center shrink-0" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" id="bg-close" onclick="closeBackground()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold shrink-0"><i class="fa-solid fa-xmark"></i> Close</button>
         </div>
         <section class="space-y-2"><h4 class="text-[11px] font-extrabold uppercase tracking-wider text-[#9e8376] flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-[#9c6644]"></i>Graduate</h4><ul class="space-y-2.5"><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">2019 &middot; Sharia Law</p><p class="text-[11px] text-[#735c52]">Major in Fiqh</p><p class="text-[11px] text-[#9e8376]">Mu&rsquo;tah University, Jordan</p></div></li></ul></section><section class="space-y-2"><h4 class="text-[11px] font-extrabold uppercase tracking-wider text-[#9e8376] flex items-center gap-2"><i class="fa-solid fa-user-graduate text-[#9c6644]"></i>Undergraduate</h4><ul class="space-y-2.5"><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">2012 &middot; BS Education</p><p class="text-[11px] text-[#735c52]">Major in Science</p><p class="text-[11px] text-[#9e8376]">Universidad de Zamboanga, Downtown Zamboanga City</p></div></li></ul></section><section class="space-y-2"><h4 class="text-[11px] font-extrabold uppercase tracking-wider text-[#9e8376] flex items-center gap-2"><i class="fa-solid fa-school text-[#9c6644]"></i>High school</h4><ul class="space-y-2.5"><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">2010 &middot; Academic</p><p class="text-[11px] text-[#735c52]">Zamboanga City High School &ldquo;Main&rdquo;</p><p class="text-[11px] text-[#9e8376]">Tetuan, Zamboanga City</p></div></li><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">2010 &middot; Madrasa</p><p class="text-[11px] text-[#735c52]">Ma&rsquo;had Al-Qur&rsquo;an wal Hadith</p><p class="text-[11px] text-[#9e8376]">Talon-Talon, Zamboanga City</p></div></li></ul></section><section class="space-y-2"><h4 class="text-[11px] font-extrabold uppercase tracking-wider text-[#9e8376] flex items-center gap-2"><i class="fa-solid fa-book-open text-[#9c6644]"></i>Elementary</h4><ul class="space-y-2.5"><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">2006 &middot; Academic</p><p class="text-[11px] text-[#735c52]">Tabialan Elementary School</p><p class="text-[11px] text-[#9e8376]">Tabialan, Banguingui, Sulu</p></div></li><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">2006 &middot; Madrasa</p><p class="text-[11px] text-[#735c52]">Ma&rsquo;had Al-Ittihad</p><p class="text-[11px] text-[#9e8376]">Tabialan, Banguingui, Sulu</p></div></li></ul></section>
     </div>
@@ -2570,11 +2570,11 @@ function injectDescField(){
 loadSeasonDescription();
 </script>
 <div id="job-modal" class="hidden fixed inset-0 z-[90] bg-[#2c221e]/70 backdrop-blur-sm flex items-center justify-center p-3" onclick="if(event.target===this)closeJobs()" role="dialog" aria-modal="true" aria-labelledby="job-title">
-    <div class="bg-white rounded-3xl w-full max-w-md max-h-[85vh] overflow-y-auto p-5 space-y-4 shadow-xl border border-[#ebdcd0]">
+    <div class="glossy-card rounded-3xl w-full max-w-md max-h-[85vh] overflow-y-auto p-5 sm:p-6 space-y-4 text-[#3b271f]">
         <div class="flex items-center gap-3">
             <img id="job-photo" src="" alt="Abunadier" class="w-14 h-14 rounded-2xl object-cover border border-[#ebdcd0] shrink-0">
             <div class="min-w-0 flex-1"><h3 id="job-title" class="text-sm font-extrabold text-[#3b271f]">Abunadier</h3><p class="text-[11px] text-[#735c52]">Work experience</p></div>
-            <button type="button" id="job-close" onclick="closeJobs()" class="w-8 h-8 rounded-xl bg-[#f5ebe0] hover:bg-[#ebdcd0] text-[#735c52] flex items-center justify-center shrink-0" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" id="job-close" onclick="closeJobs()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold shrink-0"><i class="fa-solid fa-xmark"></i> Close</button>
         </div>
         <section class="space-y-2"><h4 class="text-[11px] font-extrabold uppercase tracking-wider text-[#9e8376] flex items-center gap-2"><i class="fa-solid fa-briefcase text-[#9c6644]"></i>Current work</h4><ul class="space-y-2.5"><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">Independent Content Creator</p><p class="text-[11px] text-[#735c52]">Islamic Education</p></div></li><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">DepEd</p><p class="text-[11px] text-[#735c52]">MEP Teacher</p><p class="text-[11px] text-[#9e8376]">Dumaguete City</p></div></li><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">SolarMax</p><p class="text-[11px] text-[#735c52]">Multimedia Content Creator</p><p class="text-[11px] text-[#9e8376]">Dumaguete City</p></div></li><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">Private Islamic Teacher</p><p class="text-[11px] text-[#9e8376]">Cantil-e, Dumaguete City</p></div></li></ul></section><section class="space-y-2"><h4 class="text-[11px] font-extrabold uppercase tracking-wider text-[#9e8376] flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-[#9c6644]"></i>Past work</h4><p class="inline-block px-2.5 py-0.5 rounded-full bg-[#f5ebe0] text-[#7c4d32] text-[11px] font-extrabold">2019 &ndash; 2023</p><ul class="space-y-2.5"><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">ISAL &ldquo;Islamic Studies and Arabic Language&rdquo;</p><p class="text-[11px] text-[#735c52]">Sollo Elementary School</p><p class="text-[11px] text-[#9e8376]">Tabuan Lasa, Basilan</p></div></li><li class="flex gap-3"><span class="w-1.5 rounded-full bg-[#d5c2b3] shrink-0"></span><div class="min-w-0"><p class="text-xs font-extrabold text-[#3b271f]">Islamic Teacher</p><p class="text-[11px] text-[#735c52]">Ma&rsquo;had Al-Qur&rsquo;an wal Hadith</p><p class="text-[11px] text-[#9e8376]">Talon-Talon, Zamboanga City</p></div></li></ul></section>
     </div>
@@ -5635,6 +5635,29 @@ function toggleProgram(){
   const open=b.classList.toggle('hidden')===false;
   t.innerHTML=open?'<i class="fa-solid fa-xmark"></i> Close':'<i class="fa-solid fa-eye"></i> View';
 }
+</script>
+<div id="program-modal" class="hidden fixed inset-0 z-[96] bg-[#2c221e]/70 backdrop-blur-sm items-center justify-center p-4" onclick="if(event.target===this)closeProgram()">
+  <div class="glossy-card rounded-3xl w-full max-w-lg max-h-[85vh] overflow-y-auto p-5 sm:p-6 text-left text-[11px] leading-relaxed text-[#3b271f] space-y-2">
+    <div class="flex items-center justify-between gap-2">
+      <p class="text-[12px] font-extrabold text-[#7c4d32] tracking-wide">ABUNADIER ONLINE CLASS PROGRAM</p>
+      <button type="button" onclick="closeProgram()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold"><i class="fa-solid fa-xmark"></i> Close</button>
+    </div>
+    <div class="space-y-2 pt-2">
+  <p>The Abunadier Online Class Program aims to make learning accessible to every child by providing educational opportunities, learning materials, and online classes that help children develop their knowledge and skills.</p>
+  <p>We offer the following programs:</p>
+  <p><b>1. Free Learning Materials and Lessons</b><br>We provide free lessons and learning materials that children can use to practice and improve their knowledge at home, with the guidance and support of their parents.</p>
+  <p><b>2. Weekend Online Classes</b><br>We offer regular online classes every Saturday and Sunday, from 6:00 AM to 8:00 AM. Registration is required for children who wish to participate in these classes.</p>
+  <p><b>3. Arabic Language Tutorial</b><br>We also offer Arabic language tutorials for those who are interested in learning the Arabic language. Students may choose from the available schedules provided by the administrator.</p>
+  <p class="font-extrabold text-[#7c4d32]">Our Commitment</p>
+  <p>We believe that every child deserves an opportunity to learn. Through this program, we aim to support children, encourage continuous learning, and help parents become active partners in their children’s education.</p>
+</div>
+  </div>
+</div>
+<script>
+/* --- Abunadier Online Class Program: opened from the header icon --- */
+function openProgram(){const m=$('program-modal');if(m){m.classList.remove('hidden');m.classList.add('flex');}}
+function closeProgram(){const m=$('program-modal');if(m){m.classList.add('hidden');m.classList.remove('flex');}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProgram();});
 </script>
 </body>
 </html>
